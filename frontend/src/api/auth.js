@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = axios.create({ baseURL: `${import.meta.env.VITE_API_URL}/api/aut` });
+const API = axios.create({ baseURL: `${import.meta.env.VITE_API_URL}`});
 
 // Login with email + password
 export const loginUser = async (email, password) => {
