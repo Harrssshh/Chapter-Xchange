@@ -18,7 +18,7 @@ const BookCard = ({ book }) => {
           src={
             book.image
               ? book.image.startsWith("/uploads")
-                ? `http://localhost:5001${book.image}`
+                ? `${import.meta.env.VITE_API_URL}{book.image}`
                 : book.image
               : "/default-book.jpg"
           }

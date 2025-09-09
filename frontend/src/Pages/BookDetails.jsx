@@ -16,7 +16,7 @@
     useEffect(() => {
       const fetchBook = async () => {
         try {
-          const res = await fetch(`http://localhost:5001/api/books/${id}`, {
+          const res = await fetch(`${import.meta.env.VITE_API_URL}/api/books/${id}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -122,7 +122,7 @@
               src={
                 book.image?.startsWith("http")
                 ? book.image
-                : `http://localhost:5001${book.image}`
+                : `${import.meta.env.VITE_API_URL}${book.image}`
               }
               alt={book.title}
               className="w-100 h-100 object-cover rounded shadow"

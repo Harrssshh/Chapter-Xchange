@@ -146,7 +146,7 @@ const BrowseBooks = () => {
  
     const fetchBooks = async () => {
     try {
-      const res = await fetch("http://localhost:5001/api/books");
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/books`);
       const data = await res.json();
       if (res.ok) {
         setFetchedBooks(data.books || []);
