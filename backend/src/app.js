@@ -18,16 +18,7 @@ import orderRoutes from "./routes/orderRoutes.js";
 
 const app = express();
 
-// File paths
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const uploadsPath = path.join(__dirname, "../uploads");
-app.use("/uploads", express.static(uploadsPath));
 
-// Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(morgan("dev"));
 
 // CORS setup
 const allowedOrigins = [
@@ -47,6 +38,17 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
+
+// File paths
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const uploadsPath = path.join(__dirname, "../uploads");
+app.use("/uploads", express.static(uploadsPath));
+
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan("dev"));
 
 // Handle preflight
 app.options("*", cors());
