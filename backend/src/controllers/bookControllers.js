@@ -31,41 +31,49 @@
 // =========================
 // Add new book
 // =========================
-    export const addBook = async (req, res) => {
-     try {
-      const {
-      title,
-      author,
-      price,
-      description,
-      category,
-      condition,
-      isWillingToDonate,
-      } = req.body;
-      
+export const addBook = async (req, res) => {
+  try {
+    const { title,
+            author,
+            price,
+            description,
+            category,
+            condition,
+            isWillingToDonate
+          } = req.body;
 
     // ✅ Validate required fields
-     if (!title || !author || !description || !category || !condition) {
-      return res
-        .status(400)
-        .json({ success: false, message: "All required fields must be provided" });
-      }
+    if (!title || !author || !description || !category || !condition) {
+      return res.status(400).json({ success: false, message: "All required fields must be provided" });
+    }
 
     // ✅ Determine final price
-     const finalPrice = isWillingToDonate === "true" || isWillingToDonate === true ? 0 : Number(price);
+    const finalPrice = isWillingToDonate === "true" || isWillingToDonate === true ? 0 : Number(price);
 
-     if (!isWillingToDonate && (!finalPrice || finalPrice <= 0)) {
-      return res.status(400).json({
-        success: false,
-        message: "Please provide a valid price unless donating",
-      });
-     }
+    if (!isWillingToDonate && (!finalPrice || finalPrice <= 0)) {
+      return res.status(400).json({ success: false, message: "Please provide a valid price unless donating" });
+    }
 
-    // ✅ Handle image upload
-     let imagePath = "";
-     if (req.file) {
-      imagePath = `/uploads/${req.file.filename}`.replace(/\/{2,}/g, "/");;
-     }
+    let imageUrl = "";
+
+    if (req.file) {
+      // ✅ Upload to Cloudinary using memory buffer
+      const streamUpload = (fileBuffer) => {
+        return new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            { folder: "chapter-exchange/books" },
+            (error, result) => {
+              if (result) resolve(result);
+              else reject(error);
+            }
+          );
+          stream.end(fileBuffer);
+        });
+      };
+
+      const uploadResult = await streamUpload(req.file.buffer);
+      imageUrl = uploadResult.secure_url;
+    }
 
     // ✅ Create the book
     const book = await Book.create({
@@ -77,7 +85,7 @@
       condition,
       isWillingToDonate: finalPrice === 0,
       seller: req.user.userId,
-      image: imagePath,
+      image: imageUrl,
     });
 
     res.status(201).json({ success: true, book });
@@ -86,8 +94,6 @@
     res.status(500).json({ success: false, message: "Failed to add book" });
   }
 };
-
-
     // =========================
     // Update book
     // =========================
