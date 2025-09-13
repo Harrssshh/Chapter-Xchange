@@ -22,7 +22,6 @@ const app = express();
 
 // CORS setup
 const allowedOrigins = [
-  "http://localhost:5173",
   "https://chapter-xchange.vercel.app",
 ];
 
