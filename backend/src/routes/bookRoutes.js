@@ -1,13 +1,10 @@
 // src/routes/bookRoutes.js
 import express from "express";
-import multer from "multer";
+import { upload } from "../middleware/uploads.js";
 import { addBook, getBooks, getBookById, updateBook, deleteBook,getUserBooks} from "../controllers/bookControllers.js";
 import { protect } from "../middleware/authmiddlewares.js";
 const router = express.Router();
 // Memory storage for Cloudinary upload
-const storage = multer.memoryStorage();
-export const upload = multer({ storage }).single("image");
-
 
 // Public Routes
 router.get("/", getBooks);

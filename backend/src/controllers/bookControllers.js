@@ -1,6 +1,6 @@
     // src/controllers/bookController.js
     import Book from "../models/book.js";
-
+    import cloudinary from "../utils/cloudinary.js";
     // =========================
     // Get all books
     // =========================
