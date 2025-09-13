@@ -9,7 +9,7 @@ import BookCard from "../components/BookCard";
 // Mock data for books
 const mockBooks = [
   {
-    id: "1",
+    _id: "1",
     title: "To Kill a Mockingbird",
     author: "Harper Lee",
     category: "Fiction",
@@ -19,7 +19,7 @@ const mockBooks = [
     image: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=300&h=400"
   },
   {
-    id: "2",
+    _id: "2",
     title: "1984",
     author: "George Orwell",
     category: "Science Fiction",
@@ -29,7 +29,7 @@ const mockBooks = [
     image: "https://images.unsplash.com/photo-1541963463532-d68292c34b19?auto=format&fit=crop&q=80&w=300&h=400"
   },
   {
-    id: "3",
+    _id: "3",
     title: "The Great Gatsby",
     author: "F. Scott Fitzgerald",
     category: "Fiction",
@@ -39,7 +39,7 @@ const mockBooks = [
     image: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&q=80&w=300&h=400"
   },
   {
-    id: "4",
+    _id: "4",
     title: "Sapiens: A Brief History of Humankind",
     author: "Yuval Noah Harari",
     category: "Non-Fiction",
@@ -49,7 +49,7 @@ const mockBooks = [
     image: "https://images.unsplash.com/photo-1589998059171-988d887df646?auto=format&fit=crop&q=80&w=300&h=400"
   },
   {
-    id: "5",
+    _id: "5",
     title: "Harry Potter and the Sorcerer's Stone",
     author: "J.K. Rowling",
     category: "Fantasy",
@@ -59,7 +59,7 @@ const mockBooks = [
     image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&q=80&w=300&h=400"
   },
   {
-    id: "6",
+    _id: "6",
     title: "The Hobbit",
     author: "J.R.R. Tolkien",
     category: "Fantasy",
@@ -116,7 +116,7 @@ const SearchFilters = ({ searchTerm, categoryFilter, conditionFilter, donationFi
 
 // Plain BookGrid component
 const BookGrid = ({ books, onClearFilters }) => (
-<div>
+  <div>
     {books.length === 0 && (
       <div className="text-center text-gray-500 mb-4">
         No books found.{" "}
@@ -129,10 +129,16 @@ const BookGrid = ({ books, onClearFilters }) => (
       </div>
     )}
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-     {books.map((book) => (
-      <BookCard key={book._id || book.id} book={book} />
+      {books.map((book) => (
+        <Link
+          to={`/books/${book._id || book.id}`} // ✅ navigate to BookDetails
+          key={book._id || book.id}
+          className="block"
+        >
+          <BookCard book={book} />
+        </Link>
       ))}
-     </div>
+    </div>
   </div>
 );
 
