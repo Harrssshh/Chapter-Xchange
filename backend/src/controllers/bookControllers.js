@@ -33,6 +33,8 @@
 // =========================
 export const addBook = async (req, res) => {
   try {
+     console.log("📥 Incoming Request Body:", req.body);
+    console.log("📸 Incoming File:", req.file);
     const { title,
             author,
             price,
