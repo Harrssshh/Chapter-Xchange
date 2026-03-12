@@ -6,7 +6,7 @@ import { UserContext } from "../contexts/UserContext";
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const { user, logout } = useContext(UserContext); // Use context
+  const { user, logout } = useContext(UserContext);
   const navigate = useNavigate();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
@@ -18,10 +18,10 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white shadow-sm border-b">
+    <nav className="bg-white shadow-sm border-b relative z-50">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
+
           <Link to="/" className="flex items-center gap-2">
             <span className="font-bold text-xl">ChapterExchange</span>
           </Link>
@@ -31,10 +31,7 @@ const Navbar = () => {
             <Link to="/browse" className="px-3 py-2 hover:text-primary">Browse Books</Link>
 
             {user && (
-              <Link
-                to="/add-book"
-                className="px-3 py-2 hover:text-primary"
-              >
+              <Link to="/add-book" className="px-3 py-2 hover:text-primary">
                 Add Book
               </Link>
             )}
@@ -49,7 +46,7 @@ const Navbar = () => {
                   <button className="px-4 py-2 text-sm border rounded-lg hover:bg-gray-100">Login</button>
                 </Link>
                 <Link to="/signup">
-                  <button className="px-4 py-2 text-sm bg-primary text-white bg-black rounded-lg hover:bg-primary/90">Sign Up</button>
+                  <button className="px-4 py-2 text-sm bg-black text-white rounded-lg hover:bg-gray-800">Sign Up</button>
                 </Link>
               </div>
             ) : (
@@ -63,7 +60,7 @@ const Navbar = () => {
                 </button>
 
                 {isUserMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg py-2">
+                  <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg py-2 z-50">
                     <div className="px-4 py-2 border-b">
                       <p className="text-sm font-semibold">{user.name}</p>
                       <p className="text-xs text-gray-500">{user.email}</p>
@@ -76,23 +73,7 @@ const Navbar = () => {
                     >
                       Profile
                     </Link>
-
-                    <Link
-                      to="/my-books"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      onClick={() => setIsUserMenuOpen(false)}
-                    >
-                      My Books
-                    </Link>
-
-                    <Link
-                      to="/orders"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      onClick={() => setIsUserMenuOpen(false)}
-                    >
-                      Orders
-                    </Link>
-
+                    
                     <button
                       onClick={handleLogout}
                       className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
@@ -106,25 +87,23 @@ const Navbar = () => {
           </div>
 
           <div className="md:hidden">
-            <button onClick={toggleMenu} className="text-gray-700 hover:text-primary">
+            <button onClick={toggleMenu}>
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
+
         </div>
       </div>
 
       {isMenuOpen && (
         <div className="md:hidden bg-white border-t">
           <div className="container mx-auto px-4 py-3 space-y-2">
+
             <Link to="/" className="block px-3 py-2 hover:text-primary" onClick={toggleMenu}>Home</Link>
             <Link to="/browse" className="block px-3 py-2 hover:text-primary" onClick={toggleMenu}>Browse Books</Link>
 
             {user && (
-              <Link
-                to="/add-book"
-                className="block px-3 py-2 hover:text-primary"
-                onClick={toggleMenu}
-              >
+              <Link to="/add-book" className="block px-3 py-2 hover:text-primary" onClick={toggleMenu}>
                 Add Book
               </Link>
             )}
@@ -139,7 +118,7 @@ const Navbar = () => {
                   <button className="w-full px-4 py-2 border rounded-lg hover:bg-gray-100">Login</button>
                 </Link>
                 <Link to="/signup" onClick={toggleMenu}>
-                  <button className="w-full px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90">Sign Up</button>
+                  <button className="w-full px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800">Sign Up</button>
                 </Link>
               </div>
             ) : (
@@ -147,6 +126,7 @@ const Navbar = () => {
                 <p className="px-3 py-2 font-semibold">{user.name}</p>
                 <Link to="/my-books" className="block px-3 py-2 text-sm hover:bg-gray-100" onClick={toggleMenu}>My Books</Link>
                 <Link to="/orders" className="block px-3 py-2 text-sm hover:bg-gray-100" onClick={toggleMenu}>Orders</Link>
+
                 <button
                   onClick={() => { handleLogout(); toggleMenu(); }}
                   className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-gray-100"
@@ -155,6 +135,7 @@ const Navbar = () => {
                 </button>
               </div>
             )}
+
           </div>
         </div>
       )}

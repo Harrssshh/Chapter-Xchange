@@ -9,9 +9,11 @@ const UserPanel = () => {
   const [myOrders, setMyOrders] = useState([]);
 
   useEffect(() => {
-    if (user?._id) {
+    const userId = user?._id || user?.id;
 
-      fetch(`${import.meta.env.VITE_API_URL}/api/books/user/${user._id}`)
+    if (userId) {
+
+      fetch(`${import.meta.env.VITE_API_URL}/api/books/user/${userId}`)
         .then((res) => res.json())
         .then((data) => {
           if (Array.isArray(data)) {
@@ -22,7 +24,7 @@ const UserPanel = () => {
         })
         .catch((err) => console.error("Books fetch error:", err));
 
-      fetch(`${import.meta.env.VITE_API_URL}/api/orders/user/${user._id}`)
+      fetch(`${import.meta.env.VITE_API_URL}/api/orders/user/${userId}`)
         .then((res) => res.json())
         .then((data) => {
           if (Array.isArray(data)) {
@@ -54,33 +56,21 @@ const UserPanel = () => {
       <div className="flex space-x-4 border-b mb-6">
         <button
           onClick={() => setActiveTab("profile")}
-          className={`pb-2 px-4 ${
-            activeTab === "profile"
-              ? "border-b-2 border-primary text-primary"
-              : ""
-          }`}
+          className={`pb-2 px-4 ${activeTab === "profile" ? "border-b-2 border-primary text-primary" : ""}`}
         >
           Profile
         </button>
 
         <button
           onClick={() => setActiveTab("books")}
-          className={`pb-2 px-4 ${
-            activeTab === "books"
-              ? "border-b-2 border-primary text-primary"
-              : ""
-          }`}
+          className={`pb-2 px-4 ${activeTab === "books" ? "border-b-2 border-primary text-primary" : ""}`}
         >
           My Books
         </button>
 
         <button
           onClick={() => setActiveTab("orders")}
-          className={`pb-2 px-4 ${
-            activeTab === "orders"
-              ? "border-b-2 border-primary text-primary"
-              : ""
-          }`}
+          className={`pb-2 px-4 ${activeTab === "orders" ? "border-b-2 border-primary text-primary" : ""}`}
         >
           My Orders
         </button>
@@ -88,16 +78,9 @@ const UserPanel = () => {
 
       {activeTab === "profile" && (
         <div className="space-y-4">
-          <p>
-            <strong>Name:</strong> {user.name}
-          </p>
-          <p>
-            <strong>Email:</strong> {user.email}
-          </p>
-          <p>
-            <strong>Joined:</strong>{" "}
-            {new Date(user.createdAt).toLocaleDateString()}
-          </p>
+          <p><strong>Name:</strong> {user.name}</p>
+          <p><strong>Email:</strong> {user.email}</p>
+          <p><strong>Joined:</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
         </div>
       )}
 
@@ -108,10 +91,7 @@ const UserPanel = () => {
           ) : (
             <ul className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {myBooks.map((book) => (
-                <li
-                  key={book._id}
-                  className="p-4 border rounded-lg shadow-sm"
-                >
+                <li key={book._id} className="p-4 border rounded-lg shadow-sm">
                   <h3 className="font-bold">{book.title}</h3>
                   <p>{book.author}</p>
                   <p className="text-sm text-gray-500">${book.price}</p>
@@ -136,16 +116,11 @@ const UserPanel = () => {
           ) : (
             <ul className="space-y-4">
               {myOrders.map((order) => (
-                <li
-                  key={order._id}
-                  className="p-4 border rounded-lg shadow-sm"
-                >
+                <li key={order._id} className="p-4 border rounded-lg shadow-sm">
                   <h3 className="font-bold">Order #{order._id}</h3>
-
                   <p className="text-sm text-gray-500">
                     {new Date(order.createdAt).toLocaleDateString()}
                   </p>
-
                   <p className="mt-2">Total: ${order.totalAmount}</p>
 
                   <ul className="mt-2 list-disc list-inside">
