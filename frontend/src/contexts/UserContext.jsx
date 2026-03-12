@@ -1,14 +1,11 @@
 import React, { createContext, useState, useEffect } from "react";
 
-// Create context
 export const UserContext = createContext();
 
-// Provider component
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null); // ✅ add token state
+  const [token, setToken] = useState(null);
 
-  // Load user & token from localStorage on initial render
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     const storedUser = localStorage.getItem("user");
@@ -18,7 +15,6 @@ export const UserProvider = ({ children }) => {
     }
   }, []);
 
-  // Update user/token when localStorage changes (multi-tab support)
   useEffect(() => {
     const handleStorageChange = () => {
       const storedToken = localStorage.getItem("token");
@@ -40,14 +36,14 @@ export const UserProvider = ({ children }) => {
     localStorage.setItem("user", JSON.stringify(userData));
     localStorage.setItem("token", jwtToken);
     setUser(userData);
-    setToken(jwtToken); // ✅ save token in state too
+    setToken(jwtToken);
   };
 
   const logout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     setUser(null);
-    setToken(null); // ✅ clear token
+    setToken(null); 
   };
 
   return (

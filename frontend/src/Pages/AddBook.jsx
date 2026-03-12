@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import Layout from "../components/Layout";
-import { toast } from "react-hot-toast"; // ✅ Toast notifications
+import { toast } from "react-hot-toast"; 
 import { UserContext } from "../contexts/UserContext";
 
 const AddBook = ({ onBookAdded }) => {
@@ -13,12 +13,11 @@ const AddBook = ({ onBookAdded }) => {
   const [image, setImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [price, setPrice] = useState("");
-  const { user, token } = useContext(UserContext); // ✅ get logged-in user & token
+  const { user, token } = useContext(UserContext); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // ✅ Frontend validation
     if (!title || !author || !category || !condition) {
       toast.error("Please fill in all required fields.");
       return;
@@ -39,7 +38,6 @@ const AddBook = ({ onBookAdded }) => {
 
     try {
       
-      // ✅ Prepare form data to send as multipart/form-data
       const formData = new FormData();
       formData.append("title", title);
       formData.append("author", author);
@@ -50,14 +48,14 @@ const AddBook = ({ onBookAdded }) => {
       formData.append("price", isWillingToDonate ? 0 : price);
 
       if (image) {
-        formData.append("image", image); // ✅ Attach image file
+        formData.append("image", image); 
       }
 
       // ✅ Send data to backend
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/books`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`, // ✅ JWT authentication
+          Authorization: `Bearer ${token}`, 
         },
         body: formData,
       });
@@ -68,10 +66,8 @@ const AddBook = ({ onBookAdded }) => {
         throw new Error(data.message || "Failed to add book");
       }
 
-      // ✅ Success
       toast.success("Book added successfully!");
 
-      // ✅ Reset form fields
       setTitle("");
       setAuthor("");
       setCategory("");
@@ -102,7 +98,6 @@ const AddBook = ({ onBookAdded }) => {
 
           <form onSubmit={handleSubmit}>
             <div className="p-6 space-y-4">
-              {/* Book Title */}
               <div className="space-y-2">
                 <label htmlFor="title" className="text-sm font-medium">Book Title <span className="text-red-500">*</span></label>
                 <input
@@ -115,7 +110,6 @@ const AddBook = ({ onBookAdded }) => {
                 />
               </div>
 
-              {/* Author */}
               <div className="space-y-2">
                 <label htmlFor="author" className="text-sm font-medium">Author <span className="text-red-500">*</span></label>
                 <input
@@ -128,9 +122,7 @@ const AddBook = ({ onBookAdded }) => {
                 />
               </div>
 
-              {/* Category & Condition */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Category */}
                 <div className="space-y-2">
                   <label htmlFor="category" className="text-sm font-medium">Category <span className="text-red-500">*</span></label>
                   <select
@@ -155,7 +147,6 @@ const AddBook = ({ onBookAdded }) => {
                   </select>
                 </div>
 
-                {/* Condition */}
                 <div className="space-y-2">
                   <label htmlFor="condition" className="text-sm font-medium">Condition <span className="text-red-500">*</span></label>
                   <select
@@ -175,7 +166,6 @@ const AddBook = ({ onBookAdded }) => {
                 </div>
               </div>
 
-              {/* Description */}
               <div className="space-y-2">
                 <label htmlFor="description" className="text-sm font-medium">Description</label>
                 <textarea
@@ -188,7 +178,6 @@ const AddBook = ({ onBookAdded }) => {
                 />
               </div>
 
-              {/* Willing to Donate */}
               <div className="flex items-center space-x-2 pt-2">
                 <input
                   id="donate"
@@ -199,7 +188,6 @@ const AddBook = ({ onBookAdded }) => {
                 />
                 <label htmlFor="donate" className="text-sm font-medium">I am willing to donate this book (no exchange required)</label>
               </div>
-              {/* Price (if not donating) */}
               {!isWillingToDonate && (
               <div className="space-y-2">
                 <label htmlFor="price" className="text-sm font-medium">Price <span className="text-red-500">*</span></label>
@@ -215,7 +203,6 @@ const AddBook = ({ onBookAdded }) => {
               </div>
               )}
 
-              {/* Book Cover Image */}
               <div className="space-y-2">
                 <label htmlFor="image" className="text-sm font-medium">Book Cover Image (Optional)</label>
                 <input id="image" type="file" accept="image/*" className="w-full" onChange={(e) => setImage(e.target.files[0])} />
@@ -223,7 +210,6 @@ const AddBook = ({ onBookAdded }) => {
               </div>
             </div>
 
-            {/* Submit Button */}
             <div className="p-6 border-t border-gray-200">
               <button
                 type="submit"

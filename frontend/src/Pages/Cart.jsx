@@ -5,7 +5,6 @@ import Layout from "../components/Layout";
 const Cart = () => {
   const navigate = useNavigate();
 
-  // Load cart items from localStorage
   const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
@@ -13,26 +12,22 @@ const Cart = () => {
     setCartItems(storedCart);
   }, []);
 
-  // Remove item from cart
   const removeFromCart = (id) => {
     const updatedCart = cartItems.filter((item) => item._id !== id);
     setCartItems(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
-  // Clear entire cart
   const clearCart = () => {
     setCartItems([]);
     localStorage.removeItem("cart");
   };
 
-  // Calculate total price
   const totalPrice = cartItems.reduce(
     (total, item) => total + (item.price || 0) * (item.quantity || 1),
     0
   );
 
-  // Proceed to checkout with Stripe
   const handleCheckout = async () => {
     const token = localStorage.getItem("token");
 
@@ -72,7 +67,6 @@ const Cart = () => {
         return;
       }
 
-      // Redirect to Stripe Checkout
       window.location.href = data.checkoutUrl;
     } catch (err) {
       console.error("Checkout error:", err);
@@ -80,7 +74,6 @@ const Cart = () => {
     }
   };
 
-  // Empty cart screen
   if (cartItems.length === 0) {
     return (
       <Layout>
@@ -128,7 +121,6 @@ const Cart = () => {
           ))}
         </div>
 
-        {/* Total and Clear Cart */}
         <div className="mt-6 flex justify-between items-center">
           <button
             className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
@@ -139,7 +131,6 @@ const Cart = () => {
           <div className="text-lg font-semibold">Total: {totalPrice} ₹</div>
         </div>
 
-        {/* Proceed to Checkout */}
         <div className="mt-6">
           <button
             onClick={handleCheckout}

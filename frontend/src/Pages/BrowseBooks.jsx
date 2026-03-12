@@ -7,7 +7,6 @@ import AddBook from "./AddBook";
 import BookCard from "../components/BookCard";
 
 
-// Mock data for books
 const mockBooks = [
   {
     _id: "1",
@@ -71,7 +70,6 @@ const mockBooks = [
   }
 ];
 
-// Plain SearchFilters component
 const SearchFilters = ({ searchTerm, categoryFilter, conditionFilter, donationFilter, onSearchChange, onCategoryChange, onConditionChange, onDonationChange }) => (
   <div className="mb-6 space-y-4">
     <input
@@ -115,7 +113,6 @@ const SearchFilters = ({ searchTerm, categoryFilter, conditionFilter, donationFi
   </div>
 );
 
-// Plain BookGrid component
 const BookGrid = ({ books, onClearFilters }) => (
   <div>
     {books.length === 0 && (
@@ -132,7 +129,7 @@ const BookGrid = ({ books, onClearFilters }) => (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       {books.map((book) => (
         <Link
-          to={`/books/${book._id || book.id}`} // ✅ navigate to BookDetails
+          to={`/books/${book._id || book.id}`} 
           key={book._id || book.id}
           className="block"
         >
@@ -168,7 +165,7 @@ const BrowseBooks = () => {
       fetchBooks();
   }, []);
    const handleBookAdded = () => {
-    setReload(prev => !prev); // trigger refetch
+    setReload(prev => !prev); 
   };
   const allBooks = [...mockBooks, ...fetchedBooks];
 

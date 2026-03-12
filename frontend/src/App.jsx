@@ -26,7 +26,6 @@ const App = () => (
         <Route path="/user" element={<UserPanel />} />
         <Route path="/user" element={<UserProfile />} />   
         <Route path="/cart" element={<Cart />} /> 
-        {/* Catch-all route */}
         <Route path="*" element={<NotFound />} />
       </Routes>
   </QueryClientProvider>

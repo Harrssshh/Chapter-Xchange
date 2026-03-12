@@ -1,4 +1,3 @@
-// src/models/Book.js
 import mongoose from "mongoose";
 
 const bookSchema = new mongoose.Schema(
@@ -20,11 +19,10 @@ const bookSchema = new mongoose.Schema(
      min: [0, "Price cannot be negative"],
      validate: {
        validator: function (value) {
-      // If not donating, price must be > 0
         if (!this.isWillingToDonate) {
          return value > 0;
         }
-         return true; // if donating, no price needed
+         return true; 
         },
       message: "Please provide a valid price unless donating",
      },
@@ -46,13 +44,13 @@ const bookSchema = new mongoose.Schema(
       default: false,
     },
     image: {
-      type: String, // Stores file path or URL
+      type: String, 
       default: "",
     },
     seller: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true, // Each book must be linked to a user
+      required: true, 
     },
   },
   { timestamps: true }

@@ -12,11 +12,9 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const { login } = useContext(UserContext); // ✅ Get login function from context
+  const { login } = useContext(UserContext); 
 
-  // ------------------------
-  // Manual email/password login
-  // ------------------------
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -36,7 +34,6 @@ const Login = () => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Login failed");
 
-      // ✅ Immediately update context and localStorage
       login(data.user, data.token);
 
       alert("Logged in successfully!");
@@ -48,9 +45,7 @@ const Login = () => {
     }
   };
 
-  // ------------------------
-  // Google login
-  // ------------------------
+
   const handleGoogleSuccess = async (credentialResponse) => {
     if (!credentialResponse?.credential) return;
 
@@ -65,7 +60,6 @@ const Login = () => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Google login failed");
 
-      // ✅ Immediately update context and localStorage
       login(data.user, data.token);
 
       alert("Logged in with Google!");
@@ -91,7 +85,6 @@ const Login = () => {
 
           <form onSubmit={handleSubmit}>
             <div className="p-6 space-y-4">
-              {/* Google login */}
               <div className="flex justify-center mb-4">
                 <GoogleLogin
                   onSuccess={handleGoogleSuccess}
@@ -99,7 +92,6 @@ const Login = () => {
                 />
               </div>
 
-              {/* Divider */}
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
                   <span className="w-full border-t" />
@@ -109,7 +101,6 @@ const Login = () => {
                 </div>
               </div>
 
-              {/* Email */}
               <div className="space-y-2">
                 <label htmlFor="email" className="text-sm font-medium">Email</label>
                 <input
@@ -122,7 +113,6 @@ const Login = () => {
                 />
               </div>
 
-              {/* Password */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <label htmlFor="password" className="text-sm font-medium">Password</label>

@@ -12,7 +12,6 @@
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
-    // Fetch book details
     useEffect(() => {
       const fetchBook = async () => {
         try {
@@ -37,7 +36,6 @@
     }, [id, token]);
 
 
-    // Add to Cart
     const handleAddToCart = () => {
       if (!user) {
         alert("Please log in to add items to your cart.");
@@ -53,48 +51,7 @@
       navigate("/cart");
     };
 
-    // Buy Now
-// const handleBuyNow = async () => {
-//   if (!user) {
-//     alert("Please log in to purchase books.");
-//     navigate("/login");
-//     return;
-//   }
 
-//   try {
-//     const res = await fetch("http://localhost:5001/api/orders", {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: `Bearer ${token}`,
-//       },
-//       body: JSON.stringify({
-//         items: [
-//           {
-//             bookId: book._id,
-//             quantity: 1,
-//             price: book.price,
-//             title: book.title,
-//           },
-//         ],
-//         totalAmount: book.price,
-//       }),
-//     });
-
-//     const data = await res.json();
-
-//     if (!res.ok) {
-//       alert(data.message || "Checkout failed");
-//       return;
-//     }
-
-//     // Redirect user to Stripe checkout
-//     window.location.href = data.checkoutUrl;
-//   } catch (err) {
-//     console.error("Checkout error:", err);
-//     alert("An error occurred while processing your payment.");
-//   }
-// };
 
     if (error || !book) {
       return (
@@ -116,7 +73,6 @@
       <Layout>
         <div className="max-w-5xl mx-auto py-8 px-4">
           <div className="flex flex-col md:flex-row gap-8">
-            {/* Book Image */}
             <div className="flex-shrink-0 w-full md:w-1/3">
             <img
               src={
@@ -129,7 +85,6 @@
             />  
             </div>
 
-            {/* Book Details */}
             <div className="flex-grow">
               <h1 className="text-3xl font-bold mb-2">{book.title}</h1>
               <p className="text-gray-600 text-lg mb-4">by {book.author}</p>
@@ -155,7 +110,6 @@
                 )}
               </div>
 
-              {/* Book Description */}
               {book.description && (
                 <div className="mt-6">
                   <h2 className="text-xl font-semibold mb-2">Description</h2>
@@ -163,7 +117,6 @@
                 </div>
               )}
 
-              {/* Action Buttons */}
               <div className="mt-8 flex gap-4">
                 {!book.isForDonation && (
                   <>
@@ -173,12 +126,7 @@
                     >
                       Add to Cart
                     </button>
-                    {/* <button
-                      onClick={handleBuyNow}
-                      className="px-5 py-2 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 transition"
-                    >
-                      Buy Now
-                    </button> */}
+                    
                   </>
                 )}
                 <Link

@@ -1,4 +1,3 @@
-// src/models/User.js
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
@@ -16,7 +15,7 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      select: false, // Don't return password by default
+      select: false,
     },
     role: {
       type: String,
@@ -25,11 +24,11 @@ const userSchema = new mongoose.Schema(
     },
     tenantId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Tenant", // Optional if you use multi-tenancy
+      ref: "Tenant", 
     },
     googleId: {
       type: String,
-      default: null, // If logged in using Google OAuth
+      default: null,
     },
   },
   { timestamps: true }

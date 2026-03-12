@@ -1,7 +1,6 @@
 
-// src/config/keys.js
 import dotenv from "dotenv";
-dotenv.config(); // Load environment variables
+dotenv.config(); 
 
 export const config = {
   PORT: process.env.PORT || 5001,

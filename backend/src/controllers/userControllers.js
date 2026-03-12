@@ -1,7 +1,5 @@
-// src/controllers/userController.js
 import User from "../models/user.js";
 
-// Get user profile
 export const getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select("-password");
@@ -13,16 +11,14 @@ export const getProfile = async (req, res) => {
   }
 };
 
-// Update user profile
 export const updateProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    // Update fields if provided
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
-    if (req.body.password) user.password = req.body.password; // Hash in pre-save hook if using mongoose
+    if (req.body.password) user.password = req.body.password; 
 
     await user.save();
     res.json({ message: "Profile updated successfully", user });

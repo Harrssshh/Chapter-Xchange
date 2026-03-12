@@ -27,7 +27,6 @@ const SearchFilters = ({
           </div>
         </div>
 
-        {/* Category Filter */}
         <div>
           <select
             value={categoryFilter}
@@ -45,7 +44,6 @@ const SearchFilters = ({
           </select>
         </div>
 
-        {/* Condition Filter */}
         <div>
           <select
             value={conditionFilter}
@@ -62,7 +60,6 @@ const SearchFilters = ({
           </select>
         </div>
 
-        {/* Donation/Exchange Filter */}
         <div>
           <select
             value={donationFilter}

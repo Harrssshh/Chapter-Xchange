@@ -4,7 +4,6 @@ import Layout from "../components/Layout";
 import { BookOpen, BookPlus, Users } from "lucide-react";
 
 const Index = () => {
-  // Check if user is logged in
   const isLoggedIn = Boolean(localStorage.getItem("token"));
 
   const features = [
@@ -30,7 +29,6 @@ const Index = () => {
 
   return (
     <Layout>
-      {/* Hero Section */}
       <section className="py-12 md:py-24">
         <div className="container px-4 md:px-6">
           <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
@@ -44,7 +42,6 @@ const Index = () => {
                 expand your literary horizons.
               </p>
 
-              {/* Show both buttons if NOT logged in */}
               {!isLoggedIn && (
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
                   <Link to="/signup">
@@ -60,7 +57,6 @@ const Index = () => {
                 </div>
               )}
 
-              {/* If logged in, only show Browse Books button */}
               {isLoggedIn && (
                 <Link to="/browse">
                   <button className="border border-blue-600 text-blue-600 px-6 py-2 rounded-md text-lg hover:bg-blue-50 transition">
@@ -83,7 +79,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Features Section */}
       <section className="py-12 bg-gray-50">
         <div className="container px-4 md:px-6">
           <div className="text-center mb-10">
@@ -108,7 +103,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* CTA Section - Hidden when logged in */}
       {!isLoggedIn && (
         <section className="py-16">
           <div className="container px-4 md:px-6">

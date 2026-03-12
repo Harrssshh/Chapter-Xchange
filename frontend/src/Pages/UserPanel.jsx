@@ -36,7 +36,6 @@ const UserPanel = () => {
     <div className="container mx-auto px-4 py-10">
       <h1 className="text-3xl font-bold mb-6">User Dashboard</h1>
 
-      {/* Tabs */}
       <div className="flex space-x-4 border-b mb-6">
         <button
           onClick={() => setActiveTab("profile")}
@@ -58,7 +57,6 @@ const UserPanel = () => {
         </button>
       </div>
 
-      {/* Profile Section */}
       {activeTab === "profile" && (
         <div className="space-y-4">
           <p><strong>Name:</strong> {user.name}</p>
@@ -67,7 +65,6 @@ const UserPanel = () => {
         </div>
       )}
 
-      {/* My Books Section */}
       {activeTab === "books" && (
         <div>
           {myBooks.length === 0 ? (
@@ -92,7 +89,6 @@ const UserPanel = () => {
         </div>
       )}
 
-      {/* My Orders Section */}
       {activeTab === "orders" && (
         <div>
           {myOrders.length === 0 ? (

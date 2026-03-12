@@ -1,9 +1,6 @@
-    // src/controllers/bookController.js
     import Book from "../models/book.js";
     import cloudinary from "../utils/cloudinary.js";
-    // =========================
-    // Get all books
-    // =========================
+  
     export const getBooks = async (req, res) => {
     try {
         const books = await Book.find().sort({ createdAt: -1 });
@@ -14,9 +11,6 @@
     }
     };
 
-    // =========================
-    // Get single book
-    // =========================
     export const getBook = async (req, res) => {
     try {
         const book = await Book.findById(req.params.id);
@@ -28,9 +22,7 @@
     }
     };
 
-// =========================
-// Add new book
-// =========================
+
 export const addBook = async (req, res) => {
   try {
      console.log("📥 Incoming Request Body:", req.body);
@@ -44,12 +36,10 @@ export const addBook = async (req, res) => {
             isWillingToDonate
           } = req.body;
 
-    // ✅ Validate required fields
     if (!title || !author || !description || !category || !condition) {
       return res.status(400).json({ success: false, message: "All required fields must be provided" });
     }
 
-    // ✅ Determine final price
     const finalPrice = isWillingToDonate === "true" || isWillingToDonate === true ? 0 : Number(price);
 
     if (!isWillingToDonate && (!finalPrice || finalPrice <= 0)) {
@@ -59,7 +49,6 @@ export const addBook = async (req, res) => {
     let imageUrl = "";
 
     if (req.file) {
-      // ✅ Upload to Cloudinary using memory buffer
       const streamUpload = (fileBuffer) => {
         return new Promise((resolve, reject) => {
           const stream = cloudinary.uploader.upload_stream(
@@ -77,7 +66,6 @@ export const addBook = async (req, res) => {
       imageUrl = uploadResult.secure_url;
     }
 
-    // ✅ Create the book
     const book = await Book.create({
       title,
       author,
@@ -96,15 +84,11 @@ export const addBook = async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to add book" });
   }
 };
-    // =========================
-    // Update book
-    // =========================
     export const updateBook = async (req, res) => {
     try {
         const book = await Book.findById(req.params.id);
         if (!book) return res.status(404).json({ success: false, message: "Book not found" });
 
-        // Ensure only the owner can update
         if (book.userId.toString() !== req.user.userId) {
         return res.status(403).json({ success: false, message: "Unauthorized" });
         }
@@ -119,15 +103,12 @@ export const addBook = async (req, res) => {
     }
     };
 
-    // =========================
-    // Delete book
-    // =========================
+
     export const deleteBook = async (req, res) => {
     try {
         const book = await Book.findById(req.params.id);
         if (!book) return res.status(404).json({ success: false, message: "Book not found" });
 
-        // Ensure only the owner can delete
         if (book.userId.toString() !== req.user.userId) {
         return res.status(403).json({ success: false, message: "Unauthorized" });
         }
@@ -149,7 +130,6 @@ export const addBook = async (req, res) => {
         res.status(500).json({ success: false, message: "Failed to fetch book" });
   }
 };
-// Get books added by a specific user
 export const getUserBooks = async (req, res) => {
   try {
     const books = await Book.find({ seller: req.params.userId });
@@ -159,7 +139,6 @@ export const getUserBooks = async (req, res) => {
   }
 };
 
-// Get orders for a specific user
 export const getUserOrders = async (req, res) => {
   try {
     const orders = await Order.find({ user: req.params.userId });

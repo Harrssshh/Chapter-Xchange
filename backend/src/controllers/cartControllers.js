@@ -1,10 +1,7 @@
-// src/controllers/cartController.js
 import Cart from "../models/cart.js";
 import Book from "../models/book.js";
 
-// =========================
-// Get user's cart
-// =========================
+
 export const getCart = async (req, res) => {
   try {
     const cart = await Cart.find({ userId: req.user.userId }).populate("bookId");
@@ -15,9 +12,6 @@ export const getCart = async (req, res) => {
   }
 };
 
-// =========================
-// Add a book to cart
-// =========================
 export const addToCart = async (req, res) => {
   try {
     const { bookId } = req.body;
@@ -25,7 +19,6 @@ export const addToCart = async (req, res) => {
     const book = await Book.findById(bookId);
     if (!book) return res.status(404).json({ success: false, message: "Book not found" });
 
-    // Check if item already exists in cart
     const existingItem = await Cart.findOne({ userId: req.user.userId, bookId });
     if (existingItem) return res.status(400).json({ success: false, message: "Book already in cart" });
 
@@ -37,9 +30,6 @@ export const addToCart = async (req, res) => {
   }
 };
 
-// =========================
-// Remove a book from cart
-// =========================
 export const removeFromCart = async (req, res) => {
   try {
     const { id } = req.params;
@@ -47,7 +37,6 @@ export const removeFromCart = async (req, res) => {
     const cartItem = await Cart.findById(id);
     if (!cartItem) return res.status(404).json({ success: false, message: "Cart item not found" });
 
-    // Ensure user owns this cart item
     if (cartItem.userId.toString() !== req.user.userId) {
       return res.status(403).json({ success: false, message: "Unauthorized" });
     }

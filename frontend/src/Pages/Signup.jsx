@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import { Eye, EyeOff } from "lucide-react";
 import { signupUser, googleLogin } from "../api/auth"; 
-import { UserContext } from "../contexts/UserContext"; // ✅ Import UserContext
+import { UserContext } from "../contexts/UserContext"; 
 
 const Signup = () => {
   const [name, setName] = useState("");
@@ -15,11 +15,9 @@ const Signup = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const { login } = useContext(UserContext); // ✅ Use login from context
+  const { login } = useContext(UserContext);
 
-  // Initialize Google Identity SDK button
   useEffect(() => {
-    /* global google */
     if (window.google) {
       google.accounts.id.initialize({
         client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
@@ -32,18 +30,15 @@ const Signup = () => {
     }
   }, []);
 
-  // ------------------------
-  // GOOGLE SIGNUP
-  // ------------------------
+  
   const handleGoogleResponse = async (response) => {
     try {
       setIsLoading(true);
-      const data = await googleLogin(response.credential); // sends tokenId to backend
+      const data = await googleLogin(response.credential);
 
-      // ✅ Backend should return { user, token }
       if (data.success) {
-        login(data.user, data.token); // auto-login immediately
-        navigate("/"); // redirect to home
+        login(data.user, data.token); 
+        navigate("/"); 
       } else {
         alert(data.message || "Google signup failed");
       }
@@ -54,9 +49,6 @@ const Signup = () => {
     }
   };
 
-  // ------------------------
-  // MANUAL SIGNUP
-  // ------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -77,10 +69,9 @@ const Signup = () => {
     try {
       const data = await signupUser(name, email, password);
 
-      // ✅ Backend should return { user, token }
       if (data.success) {
-        login(data.user, data.token); // auto-login immediately
-        navigate("/"); // redirect to home
+        login(data.user, data.token); 
+        navigate("/");
       } else {
         alert(data.message || "Signup failed");
       }
@@ -102,7 +93,6 @@ const Signup = () => {
 
           <form onSubmit={handleSubmit}>
             <div className="p-6 space-y-4">
-              {/* Google login button */}
               <div id="googleBtn" className="mb-4"></div>
 
               <div className="relative">
@@ -114,7 +104,6 @@ const Signup = () => {
                 </div>
               </div>
 
-              {/* Name */}
               <div className="space-y-2">
                 <label htmlFor="name" className="text-sm font-medium">Full Name</label>
                 <input
@@ -126,7 +115,6 @@ const Signup = () => {
                 />
               </div>
 
-              {/* Email */}
               <div className="space-y-2">
                 <label htmlFor="email" className="text-sm font-medium">Email</label>
                 <input
@@ -139,7 +127,6 @@ const Signup = () => {
                 />
               </div>
 
-              {/* Password */}
               <div className="space-y-2">
                 <label htmlFor="password" className="text-sm font-medium">Password</label>
                 <div className="relative">
@@ -160,7 +147,6 @@ const Signup = () => {
                 </div>
               </div>
 
-              {/* Confirm Password */}
               <div className="space-y-2">
                 <label htmlFor="confirmPassword" className="text-sm font-medium">Confirm Password</label>
                 <div className="relative">

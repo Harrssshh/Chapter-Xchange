@@ -5,13 +5,13 @@ const BookCard = ({ book }) => {
   const navigate = useNavigate();
 
   const handleViewDetails = () => {
-    navigate(`/books/${book._id || book.id}`); // ✅ navigate to Book Detail
+    navigate(`/books/${book._id || book.id}`); 
   };
 
   return (
     <div
       className="bg-white rounded-xl border shadow hover:shadow-lg overflow-hidden transition-transform duration-300 hover:-translate-y-1 cursor-pointer"
-      onClick={handleViewDetails} // ✅ make entire card clickable
+      onClick={handleViewDetails} 
     >
       <div className="relative aspect-[3/4] overflow-hidden">
         <img
@@ -26,7 +26,6 @@ const BookCard = ({ book }) => {
           className="h-full w-full object-cover hover:scale-105 transition-transform duration-300"
         />
 
-        {/* Badge */}
         {book.isForDonation ? (
           <span className="absolute top-3 left-3 bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow">
             Free / Donation
@@ -47,10 +46,9 @@ const BookCard = ({ book }) => {
           <span>{book.condition}</span>
         </div>
 
-        {/* View Details Button */}
         <button
           onClick={(e) => {
-            e.stopPropagation(); // prevent triggering parent card click
+            e.stopPropagation();
             handleViewDetails();
           }}
           className="w-full border rounded-lg py-2 text-sm font-medium hover:bg-gray-100 transition"

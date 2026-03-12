@@ -1,8 +1,5 @@
-// backend/src/controllers/orderController.js
-
 import Order from "../models/order.js";
 import Stripe from "stripe";
-// Create a new order
 export const createOrder = async (req, res) => {
   try {
     const { userId, books, totalAmount, paymentStatus } = req.body;
@@ -29,7 +26,6 @@ export const createOrder = async (req, res) => {
   }
 };
 
-// Get all orders for a specific user
 export const getUserOrders = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -42,7 +38,6 @@ export const getUserOrders = async (req, res) => {
   }
 };
 
-// Get a single order by ID
 export const getOrderById = async (req, res) => {
   try {
     const { orderId } = req.params;
@@ -62,12 +57,11 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export const createOrderAndSession = async (req, res) => {
   try {
-    const userId = req.user.userId; // from your protect middleware
-    const { items, totalAmount } = req.body; // items = [{bookId, quantity, price, title?}]
+    const userId = req.user.userId; 
+    const { items, totalAmount } = req.body;
 
     if (!items?.length) return res.status(400).json({ message: "Cart is empty" });
 
-    // 1) Create order in DB (pending)
     const order = await Order.create({
       user: userId,
       books: items.map(item => ({
@@ -79,16 +73,15 @@ export const createOrderAndSession = async (req, res) => {
       status: "pending",
       });
 
-    // 2) Create Stripe Checkout Session
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       payment_method_types: ["card"],
-      customer_email: req.user.email, // optional
+      customer_email: req.user.email,
       line_items: items.map((it) => ({
         price_data: {
           currency: "inr",
           product_data: { name: it.title || "Book" },
-          unit_amount: it.price * 100, // rupees -> paise
+          unit_amount: it.price * 100, 
         },
         quantity: it.quantity,
       })),
@@ -100,11 +93,9 @@ export const createOrderAndSession = async (req, res) => {
       },
     });
 
-    // 3) Save session id on order
     order.stripeSessionId = session.id;
     await order.save();
 
-    // 4) Return the URL to redirect
     res.json({ checkoutUrl: session.url });
   } catch (err) {
     console.error("Stripe session error:", err);

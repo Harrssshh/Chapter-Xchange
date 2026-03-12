@@ -1,4 +1,3 @@
-// backend/src/models/Order.js
 import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema(
@@ -23,17 +22,17 @@ const orderSchema = new mongoose.Schema(
         },
         price: {
           type: Number,
-          required: true, // Store price at purchase time
+          required: true, 
         },
         title: {
-          type: String, // optional, nice for displaying in Stripe
+          type: String, 
         },
       },
     ],
 
     totalAmount: {
       type: Number,
-      required: true, // in INR (rupees)
+      required: true,
     },
 
     status: {
@@ -43,7 +42,7 @@ const orderSchema = new mongoose.Schema(
     },
 
     stripeSessionId: {
-      type: String, // To link the order with Stripe session
+      type: String, 
     },
   },
   { timestamps: true }

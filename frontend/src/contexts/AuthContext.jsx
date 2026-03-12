@@ -1,19 +1,15 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-// Create context
 const AuthContext = createContext();
 
-// Custom hook to use context
 export const useAuth = () => useContext(AuthContext);
 
-// Provider component
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // store logged-in user
+  const [user, setUser] = useState(null); 
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Check if user is already logged in
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -22,7 +18,6 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  // Login function
   const login = async (email, password) => {
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/login`, {
@@ -42,7 +37,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Signup function
   const signup = async (name, email, password) => {
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/login`, {
@@ -62,7 +56,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Logout function
   const logout = () => {
     setUser(null);
     localStorage.removeItem("user");

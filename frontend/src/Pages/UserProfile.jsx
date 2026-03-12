@@ -10,7 +10,7 @@ const UserProfile = () => {
     const userData = localStorage.getItem("user");
 
     if (!token || !userData) {
-      navigate("/login"); // redirect if not logged in
+      navigate("/login"); 
       return;
     }
 
