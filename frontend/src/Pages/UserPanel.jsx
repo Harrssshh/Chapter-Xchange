@@ -37,7 +37,10 @@ const UserPanel = () => {
     }
   }, [user]);
       
-  const handleDeleteBook = async (bookId) => {
+  const deleteBook = async (bookId) => {
+  const confirmDelete = window.confirm("Delete this book?");
+  if (!confirmDelete) return;
+
   try {
     const token = localStorage.getItem("token");
 
@@ -51,12 +54,10 @@ const UserPanel = () => {
       }
     );
 
-    const data = await res.json();
-
     if (res.ok) {
       setMyBooks(myBooks.filter((book) => book._id !== bookId));
     } else {
-      console.error("Delete failed:", data.message);
+      console.error("Failed to delete book");
     }
   } catch (error) {
     console.error("Delete error:", error);
@@ -127,13 +128,12 @@ const UserPanel = () => {
                     className="text-primary underline text-sm"
                   >
                     View
-                  </Link>
-
+                  </Link> 
                   <button
-                    onClick={() => handleDeleteBook(book._id)}
-                    className="mt-4 text-sm text-red-600 hover:underline"
+                    onClick={() => deleteBook(book._id)}
+                    className="mt-2 text-sm text-red-600 hover:underline"
                   >
-                    Delete
+                   Delete
                   </button>
                 </li>
               ))}
