@@ -11,6 +11,5 @@ router.get("/:id", getBookById);
 router.post("/", protect, upload, addBook);
 router.put("/:id", protect, updateBook);
 router.delete("/:id", protect, deleteBook);
-router.get("/user/:userId", getUserBooks);
 
 export default router;

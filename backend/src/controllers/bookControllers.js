@@ -89,7 +89,7 @@ export const addBook = async (req, res) => {
         const book = await Book.findById(req.params.id);
         if (!book) return res.status(404).json({ success: false, message: "Book not found" });
 
-        if (book.userId.toString() !== req.user.userId) {
+        if (book.seller.toString() !== req.user.userId) {
         return res.status(403).json({ success: false, message: "Unauthorized" });
         }
 
@@ -109,7 +109,7 @@ export const addBook = async (req, res) => {
         const book = await Book.findById(req.params.id);
         if (!book) return res.status(404).json({ success: false, message: "Book not found" });
 
-        if (book.userId.toString() !== req.user.userId) {
+        if (book.seller.toString() !== req.user.userId) {
         return res.status(403).json({ success: false, message: "Unauthorized" });
         }
 
