@@ -128,6 +128,13 @@ const UserPanel = () => {
                   >
                     View
                   </Link>
+
+                  <button
+                    onClick={() => handleDeleteBook(book._id)}
+                    className="mt-2 text-sm text-red-600 hover:underline"
+                  >
+                    Delete
+                  </button>
                 </li>
               ))}
             </ul>
