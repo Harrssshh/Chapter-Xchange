@@ -131,7 +131,7 @@ const UserPanel = () => {
 
                   <button
                     onClick={() => handleDeleteBook(book._id)}
-                    className="mt-2 text-sm text-red-600 hover:underline"
+                    className="mt-4 text-sm text-red-600 hover:underline"
                   >
                     Delete
                   </button>
