@@ -38,8 +38,7 @@ const UserPanel = () => {
   }, [user]);
       
   const deleteBook = async (bookId) => {
-  const confirmDelete = window.confirm("Delete this book?");
-  if (!confirmDelete) return;
+  if (!window.confirm("Delete this book?")) return;
 
   try {
     const token = localStorage.getItem("token");
@@ -49,15 +48,18 @@ const UserPanel = () => {
       {
         method: "DELETE",
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       }
     );
 
+    const data = await res.json();
+
     if (res.ok) {
-      setMyBooks(myBooks.filter((book) => book._id !== bookId));
+      setMyBooks((prev) => prev.filter((b) => b._id !== bookId));
     } else {
-      console.error("Failed to delete book");
+      console.error("Delete failed:", data);
     }
   } catch (error) {
     console.error("Delete error:", error);
