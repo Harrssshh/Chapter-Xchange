@@ -10,13 +10,28 @@ const UserPanel = () => {
 
   useEffect(() => {
     if (user?._id) {
-      fetch(`/api/books/user/${user._id}`)
-        .then(res => res.json())
-        .then(data => setMyBooks(data));
 
-      fetch(`/api/orders/user/${user._id}`)
-        .then(res => res.json())
-        .then(data => setMyOrders(data));
+      fetch(`${import.meta.env.VITE_API_URL}/api/books/user/${user._id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (Array.isArray(data)) {
+            setMyBooks(data);
+          } else {
+            setMyBooks(data.books || []);
+          }
+        })
+        .catch((err) => console.error("Books fetch error:", err));
+
+      fetch(`${import.meta.env.VITE_API_URL}/api/orders/user/${user._id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (Array.isArray(data)) {
+            setMyOrders(data);
+          } else {
+            setMyOrders(data.orders || []);
+          }
+        })
+        .catch((err) => console.error("Orders fetch error:", err));
     }
   }, [user]);
 
@@ -39,19 +54,33 @@ const UserPanel = () => {
       <div className="flex space-x-4 border-b mb-6">
         <button
           onClick={() => setActiveTab("profile")}
-          className={`pb-2 px-4 ${activeTab === "profile" ? "border-b-2 border-primary text-primary" : ""}`}
+          className={`pb-2 px-4 ${
+            activeTab === "profile"
+              ? "border-b-2 border-primary text-primary"
+              : ""
+          }`}
         >
           Profile
         </button>
+
         <button
           onClick={() => setActiveTab("books")}
-          className={`pb-2 px-4 ${activeTab === "books" ? "border-b-2 border-primary text-primary" : ""}`}
+          className={`pb-2 px-4 ${
+            activeTab === "books"
+              ? "border-b-2 border-primary text-primary"
+              : ""
+          }`}
         >
           My Books
         </button>
+
         <button
           onClick={() => setActiveTab("orders")}
-          className={`pb-2 px-4 ${activeTab === "orders" ? "border-b-2 border-primary text-primary" : ""}`}
+          className={`pb-2 px-4 ${
+            activeTab === "orders"
+              ? "border-b-2 border-primary text-primary"
+              : ""
+          }`}
         >
           My Orders
         </button>
@@ -59,9 +88,16 @@ const UserPanel = () => {
 
       {activeTab === "profile" && (
         <div className="space-y-4">
-          <p><strong>Name:</strong> {user.name}</p>
-          <p><strong>Email:</strong> {user.email}</p>
-          <p><strong>Joined:</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
+          <p>
+            <strong>Name:</strong> {user.name}
+          </p>
+          <p>
+            <strong>Email:</strong> {user.email}
+          </p>
+          <p>
+            <strong>Joined:</strong>{" "}
+            {new Date(user.createdAt).toLocaleDateString()}
+          </p>
         </div>
       )}
 
@@ -71,13 +107,17 @@ const UserPanel = () => {
             <p>You have not added any books yet.</p>
           ) : (
             <ul className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {myBooks.map(book => (
-                <li key={book._id} className="p-4 border rounded-lg shadow-sm">
+              {myBooks.map((book) => (
+                <li
+                  key={book._id}
+                  className="p-4 border rounded-lg shadow-sm"
+                >
                   <h3 className="font-bold">{book.title}</h3>
                   <p>{book.author}</p>
                   <p className="text-sm text-gray-500">${book.price}</p>
+
                   <Link
-                    to={`/book/${book._id}`}
+                    to={`/books/${book._id}`}
                     className="text-primary underline text-sm"
                   >
                     View
@@ -95,16 +135,24 @@ const UserPanel = () => {
             <p>You have not placed any orders yet.</p>
           ) : (
             <ul className="space-y-4">
-              {myOrders.map(order => (
-                <li key={order._id} className="p-4 border rounded-lg shadow-sm">
+              {myOrders.map((order) => (
+                <li
+                  key={order._id}
+                  className="p-4 border rounded-lg shadow-sm"
+                >
                   <h3 className="font-bold">Order #{order._id}</h3>
+
                   <p className="text-sm text-gray-500">
                     {new Date(order.createdAt).toLocaleDateString()}
                   </p>
+
                   <p className="mt-2">Total: ${order.totalAmount}</p>
+
                   <ul className="mt-2 list-disc list-inside">
-                    {order.items.map(item => (
-                      <li key={item.bookId}>{item.title} - ${item.price}</li>
+                    {order.items.map((item) => (
+                      <li key={item.bookId}>
+                        {item.title} - ${item.price}
+                      </li>
                     ))}
                   </ul>
                 </li>
