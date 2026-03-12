@@ -1,5 +1,5 @@
-
 import React, { useState, useEffect } from "react";
+import BookSkeleton from "../components/BookSkeleton";
 import { Link } from "react-router-dom";
 import Layout from "../components/Layout";
 import BookCard from "../components/BookCard";
@@ -77,12 +77,13 @@ const BrowseBooks = () => {
 
         <h1 className="text-3xl font-bold mb-6">Browse Books</h1>
 
-        {/* Loading */}
         {loading ? (
-          <div className="text-center text-gray-500">
-            Loading books...
-          </div>
-        ) : (
+           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+           {[...Array(6)].map((_, i) => (
+           <BookSkeleton key={i} />
+           ))}
+           </div>
+          ) : (
           <>
             {filteredBooks.length === 0 && (
               <div className="text-center text-gray-500 mb-4">
