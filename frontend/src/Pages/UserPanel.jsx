@@ -36,6 +36,32 @@ const UserPanel = () => {
         .catch((err) => console.error("Orders fetch error:", err));
     }
   }, [user]);
+      
+  const handleDeleteBook = async (bookId) => {
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/books/${bookId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await res.json();
+
+    if (res.ok) {
+      setMyBooks(myBooks.filter((book) => book._id !== bookId));
+    } else {
+      console.error("Delete failed:", data.message);
+    }
+  } catch (error) {
+    console.error("Delete error:", error);
+  }
+};
 
   if (!user) {
     return (
