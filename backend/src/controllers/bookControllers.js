@@ -105,21 +105,26 @@ export const addBook = async (req, res) => {
 
 
     export const deleteBook = async (req, res) => {
-    try {
-        const book = await Book.findById(req.params.id);
-        if (!book) return res.status(404).json({ success: false, message: "Book not found" });
+  try {
+    const book = await Book.findById(req.params.id);
 
-        if (book.seller.toString() !== req.user.userId) {
-        return res.status(403).json({ success: false, message: "Unauthorized" });
-        }
-
-        await book.deleteOne();
-        res.status(200).json({ success: true, message: "Book deleted" });
-    } catch (err) {
-        console.error("Delete book error:", err);
-        res.status(500).json({ success: false, message: "Failed to delete book" });
+    if (!book) {
+      return res.status(404).json({ success:false, message:"Book not found" });
     }
-    };
+
+    if (book.seller.toString() !== String(req.user.userId)) {
+      return res.status(403).json({ success:false, message:"Unauthorized" });
+    }
+
+    await book.deleteOne();
+
+    res.json({ success:true, message:"Book deleted" });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success:false, message:"Server error" });
+  }
+};
     export const getBookById = async (req, res) => {
     try {
         const book = await Book.findById(req.params.id);
