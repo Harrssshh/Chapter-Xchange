@@ -4,6 +4,11 @@ import { GoogleLogin } from "@react-oauth/google";
 import Layout from "../components/Layout";
 import { Eye, EyeOff } from "lucide-react";
 import { UserContext } from "../contexts/UserContext";
+import { showSuccess, showError, showWarning } from "../components/Toast";
+
+const API_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+  ? "http://localhost:5001"
+  : import.meta.env.VITE_API_URL || "https://chapter-xchange.onrender.com";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -19,13 +24,13 @@ const Login = () => {
     e.preventDefault();
 
     if (!email || !password) {
-      alert("Please fill in all fields.");
+      showWarning("Please fill in all fields.");
       return;
     }
 
     setIsLoading(true);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
+      const res = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -36,10 +41,10 @@ const Login = () => {
 
       login(data.user, data.token);
 
-      alert("Logged in successfully!");
+      showSuccess(`Welcome back, ${data.user?.name || "Reader"}! 👋`);
       navigate("/");
     } catch (err) {
-      alert(err.message);
+      showError(err.message);
     } finally {
       setIsLoading(false);
     }
@@ -51,7 +56,7 @@ const Login = () => {
 
     setIsLoading(true);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/google`, {
+      const res = await fetch(`${API_URL}/api/auth/google`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: credentialResponse.credential }),
@@ -62,17 +67,17 @@ const Login = () => {
 
       login(data.user, data.token);
 
-      alert("Logged in with Google!");
+      showSuccess(`Welcome, ${data.user?.name || "Reader"}! Signed in with Google 🚀`);
       navigate("/");
     } catch (err) {
-      alert(err.message);
+      showError(err.message);
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleGoogleError = () => {
-    alert("Google login failed. Please try again.");
+    showError("Google login failed. Please try again.");
   };
   return (
     <Layout>

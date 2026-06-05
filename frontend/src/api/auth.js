@@ -1,6 +1,10 @@
 import axios from "axios";
 
-const API = axios.create({ baseURL: `${import.meta.env.VITE_API_URL}`});
+const API_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+  ? "http://localhost:5001"
+  : import.meta.env.VITE_API_URL || "https://chapter-xchange.onrender.com";
+
+const API = axios.create({ baseURL: API_URL });
 
 export const loginUser = async (email, password) => {
   const res = await API.post("/api/auth/login", { email, password });

@@ -5,6 +5,12 @@ export const UserContext = createContext();
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
+  const [cartCount, setCartCount] = useState(0);
+
+  const updateCartCount = () => {
+    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    setCartCount(storedCart.length);
+  };
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -13,6 +19,7 @@ export const UserProvider = ({ children }) => {
       setToken(storedToken);
       setUser(JSON.parse(storedUser));
     }
+    updateCartCount();
   }, []);
 
   useEffect(() => {
@@ -26,6 +33,7 @@ export const UserProvider = ({ children }) => {
         setToken(null);
         setUser(null);
       }
+      updateCartCount();
     };
 
     window.addEventListener("storage", handleStorageChange);
@@ -42,12 +50,14 @@ export const UserProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
+    localStorage.removeItem("cart");
     setUser(null);
     setToken(null); 
+    updateCartCount();
   };
 
   return (
-    <UserContext.Provider value={{ user, token, setUser, login, logout }}>
+    <UserContext.Provider value={{ user, token, setUser, login, logout, cartCount, updateCartCount }}>
       {children}
     </UserContext.Provider>
   );

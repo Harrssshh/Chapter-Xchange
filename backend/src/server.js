@@ -1,9 +1,9 @@
+import "dotenv/config";
+import dns from "dns";
+dns.setDefaultResultOrder("ipv4first");
+
 import app from "./app.js";
-
-import dotenv from "dotenv";
 import connectDB from "./config/db.js";
-
-dotenv.config();
 
 connectDB();
 

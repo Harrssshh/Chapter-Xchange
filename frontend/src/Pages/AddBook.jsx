@@ -132,18 +132,24 @@ const AddBook = ({ onBookAdded }) => {
                     className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="">Select a category</option>
-                    <option value="fiction">Fiction</option>
-                    <option value="non-fiction">Non-Fiction</option>
-                    <option value="mystery">Mystery</option>
-                    <option value="science-fiction">Science Fiction</option>
-                    <option value="fantasy">Fantasy</option>
-                    <option value="biography">Biography</option>
-                    <option value="history">History</option>
-                    <option value="self-help">Self-Help</option>
-                    <option value="children">Children's</option>
-                    <option value="cooking">Cooking</option>
-                    <option value="travel">Travel</option>
-                    <option value="other">Other</option>
+                    <option value="Fiction">Fiction</option>
+                    <option value="Non-Fiction">Non-Fiction</option>
+                    <option value="Mystery">Mystery</option>
+                    <option value="Romance">Romance</option>
+                    <option value="Thriller">Thriller</option>
+                    <option value="Science Fiction">Science Fiction</option>
+                    <option value="Fantasy">Fantasy</option>
+                    <option value="Manga">Manga</option>
+                    <option value="Comic">Comic</option>
+                    <option value="Biography">Biography</option>
+                    <option value="History">History</option>
+                    <option value="Self-Help">Self-Help</option>
+                    <option value="Poetry">Poetry</option>
+                    <option value="Business & Finance">Business & Finance</option>
+                    <option value="Children">Children</option>
+                    <option value="Cooking">Cooking</option>
+                    <option value="Travel">Travel</option>
+                    <option value="Other">Other</option>
                   </select>
                 </div>
 

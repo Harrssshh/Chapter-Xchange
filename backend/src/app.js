@@ -3,7 +3,6 @@ import morgan from "morgan";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
-import connectDB from "./config/db.js";
 import { notFound, errorHandler } from "./middleware/errormiddlewares.js";
 
 import authRoutes from "./routes/authRoutes.js";
@@ -12,6 +11,8 @@ import webhookRoutes from "./routes/webHookRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
+import exchangeRoutes from "./routes/exchangeRoutes.js";
+import wishlistRoutes from "./routes/wishlistRoutes.js";
 
 const app = express();
 
@@ -36,6 +37,8 @@ app.use(
   })
 );
 
+// ✅ Webhook routes (MUST be registered before express.json() body parser to receive raw buffer)
+app.use("/api/webhooks", webhookRoutes);
 
 // ✅ Body parser
 app.use(express.json());
@@ -52,17 +55,14 @@ const uploadsPath = path.join(__dirname, "../uploads");
 app.use("/uploads", express.static(uploadsPath));
 
 
-// ✅ Connect database
-connectDB();
-
-
 // ✅ Routes
-app.use("/api/webhooks", webhookRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/exchanges", exchangeRoutes);
+app.use("/api/wishlist", wishlistRoutes);
 
 
 // ✅ Error handling

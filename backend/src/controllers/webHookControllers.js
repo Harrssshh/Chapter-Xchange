@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 import Order from "../models/order.js";
+import Book from "../models/book.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -24,7 +25,12 @@ export const stripeWebhook = async (req, res) => {
       const orderId = session.metadata?.orderId;
 
       if (orderId) {
-        await Order.findByIdAndUpdate(orderId, { status: "paid" });
+        const order = await Order.findByIdAndUpdate(orderId, { status: "paid" }, { new: true });
+        if (order && order.books) {
+          for (const item of order.books) {
+            await Book.findByIdAndUpdate(item.bookId, { isAvailable: false });
+          }
+        }
       }
     }
 

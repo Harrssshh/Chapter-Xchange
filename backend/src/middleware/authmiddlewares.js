@@ -20,7 +20,7 @@ export const protect = async (req, res, next) => {
         });
       }
 
-      req.user = { userId: user._id, role: user.role };
+      req.user = { userId: user._id, role: user.role, email: user.email };
 
       next(); 
 

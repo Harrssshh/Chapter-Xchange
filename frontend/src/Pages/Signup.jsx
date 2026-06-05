@@ -3,7 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import { Eye, EyeOff } from "lucide-react";
 import { signupUser, googleLogin } from "../api/auth"; 
-import { UserContext } from "../contexts/UserContext"; 
+import { UserContext } from "../contexts/UserContext";
+import { showSuccess, showError, showWarning } from "../components/Toast";
 
 const Signup = () => {
   const [name, setName] = useState("");
@@ -37,13 +38,13 @@ const Signup = () => {
       const data = await googleLogin(response.credential);
 
       if (data.success) {
-        login(data.user, data.token); 
-        navigate("/"); 
+        login(data.user, data.token);
+        navigate("/");
       } else {
-        alert(data.message || "Google signup failed");
+        showError(data.message || "Google signup failed");
       }
     } catch (err) {
-      alert(err.message || "Google signup failed");
+      showError(err.message || "Google signup failed");
     } finally {
       setIsLoading(false);
     }
@@ -53,15 +54,15 @@ const Signup = () => {
     e.preventDefault();
 
     if (!name || !email || !password || !confirmPassword) {
-      alert("Please fill in all fields.");
+      showWarning("Please fill in all fields.");
       return;
     }
     if (password !== confirmPassword) {
-      alert("Passwords do not match.");
+      showWarning("Passwords do not match.");
       return;
     }
     if (password.length < 6) {
-      alert("Password must be at least 6 characters.");
+      showWarning("Password must be at least 6 characters.");
       return;
     }
 
@@ -70,13 +71,13 @@ const Signup = () => {
       const data = await signupUser(name, email, password);
 
       if (data.success) {
-        login(data.user, data.token); 
+        login(data.user, data.token);
         navigate("/");
       } else {
-        alert(data.message || "Signup failed");
+        showError(data.message || "Signup failed");
       }
     } catch (err) {
-      alert(err.message || "Signup failed");
+      showError(err.message || "Signup failed");
     } finally {
       setIsLoading(false);
     }

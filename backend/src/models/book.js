@@ -39,10 +39,6 @@ const bookSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please specify the condition of the book"],
     },
-    isWillingToDonate: {
-      type: Boolean,
-      default: false,
-    },
     image: {
       type: String, 
       default: "",
@@ -51,6 +47,10 @@ const bookSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true, 
+    },
+    isAvailable: {
+      type: Boolean,
+      default: true,
     },
   },
   { timestamps: true }

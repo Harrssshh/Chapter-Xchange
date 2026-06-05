@@ -18,7 +18,19 @@ createRoot(document.getElementById('root')).render(
           <AuthProvider>
             <App />
           </AuthProvider>
-          <Toaster position="top-right" reverseOrder={false} />
+          <Toaster
+            position="top-right"
+            reverseOrder={false}
+            toastOptions={{
+              style: { padding: 0, background: "transparent", boxShadow: "none" },
+            }}
+            containerStyle={{
+              top: 70,
+              right: 16,
+              bottom: 16,
+              left: 16,
+            }}
+          />
         </GoogleOAuthProvider>
       </UserProvider>
     </BrowserRouter>

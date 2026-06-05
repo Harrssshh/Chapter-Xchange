@@ -27,8 +27,50 @@ const orderSchema = new mongoose.Schema(
         title: {
           type: String, 
         },
+        shipmentStatus: {
+          type: String,
+          enum: ["pending", "shipped", "delivered"],
+          default: "pending",
+        },
+        shipmentProvider: {
+          type: String,
+          default: "",
+        },
+        trackingCode: {
+          type: String,
+          default: "",
+        },
       },
     ],
+
+    subtotal: {
+      type: Number,
+      default: 0,
+    },
+
+    gstAmount: {
+      type: Number,
+      default: 0,
+    },
+
+    shippingAmount: {
+      type: Number,
+      default: 0,
+    },
+
+    discountAmount: {
+      type: Number,
+      default: 0,
+    },
+
+    couponCode: {
+      type: String,
+      default: "",
+    },
+
+    estimatedDeliveryDate: {
+      type: Date,
+    },
 
     totalAmount: {
       type: Number,
@@ -43,6 +85,14 @@ const orderSchema = new mongoose.Schema(
 
     stripeSessionId: {
       type: String, 
+    },
+    shippingAddress: {
+      name: { type: String, required: true },
+      street: { type: String, required: true },
+      city: { type: String, required: true },
+      state: { type: String, required: true },
+      postalCode: { type: String, required: true },
+      phone: { type: String, required: true },
     },
   },
   { timestamps: true }
