@@ -76,7 +76,10 @@ export const createOrderAndSession = async (req, res) => {
       return res.status(400).json({ message: "Please provide a complete shipping address" });
     }
 
-    // Validate book availability
+    // Validate book availability and verify/recalculate pricing
+    let computedSubtotal = 0;
+    const validatedBooks = [];
+
     for (const item of items) {
       const bookObj = await Book.findById(item.bookId);
       if (!bookObj) {
@@ -88,63 +91,111 @@ export const createOrderAndSession = async (req, res) => {
       if (bookObj.seller && bookObj.seller.toString() === userId.toString()) {
         return res.status(400).json({ message: `You cannot purchase your own listed book: "${bookObj.title}".` });
       }
+
+      // Check if book is free/donation
+      const isFree = bookObj.isWillingToDonate || bookObj.price === 0;
+      const actualPrice = isFree ? 0 : (bookObj.price || 0);
+
+      validatedBooks.push({
+        bookId: bookObj._id,
+        quantity: item.quantity || 1,
+        price: actualPrice,
+        title: bookObj.title,
+      });
+
+      computedSubtotal += actualPrice * (item.quantity || 1);
     }
+
+    const computedGst = Math.round(computedSubtotal * 0.05);
+
+    // Recalculate discount based on coupon code
+    let computedDiscount = 0;
+    if (couponCode === "WELCOME10") {
+      computedDiscount = Math.round(computedSubtotal * 0.10);
+    } else if (couponCode === "CHAPTER20") {
+      if (computedSubtotal >= 500) {
+        computedDiscount = Math.round(computedSubtotal * 0.20);
+      }
+    } else if (couponCode === "BOOKWORM") {
+      if (computedSubtotal >= 400) {
+        computedDiscount = 100;
+      }
+    }
+
+    // Recalculate shipping
+    let computedShipping = 50;
+    if (computedSubtotal > 500 || couponCode === "FREESHIP") {
+      computedShipping = 0;
+    }
+
+    const computedTotal = computedSubtotal + computedGst + computedShipping - computedDiscount;
 
     // Store order with complete pricing breakdown
     const order = await Order.create({
       user: userId,
-      books: items.map(item => ({
-        bookId: item.bookId,
-        quantity: item.quantity,
-        price: item.price,
-        title: item.title,
-      })),
+      books: validatedBooks,
       shippingAddress,
-      subtotal: subtotal || 0,
-      gstAmount: gstAmount || 0,
-      shippingAmount: shippingAmount || 0,
-      discountAmount: discountAmount || 0,
+      subtotal: computedSubtotal,
+      gstAmount: computedGst,
+      shippingAmount: computedShipping,
+      discountAmount: computedDiscount,
       couponCode: couponCode || "",
       estimatedDeliveryDate: estimatedDeliveryDate ? new Date(estimatedDeliveryDate) : undefined,
-      totalAmount: totalAmount || 0,
+      totalAmount: computedTotal,
       status: "pending",
     });
 
-    // Create line items for Stripe Checkout
-    const lineItems = items.map((it) => ({
-      price_data: {
-        currency: "inr",
-        product_data: { 
-          name: it.title || "Book",
+    // Check if total amount is 0 (fully free order)
+    if (computedTotal <= 0) {
+      order.status = "paid";
+      await order.save();
+
+      // Mark books as unavailable
+      for (const item of order.books) {
+        await Book.findByIdAndUpdate(item.bookId, { isAvailable: false });
+      }
+
+      const successUrl = `${process.env.FRONTEND_URL || "http://localhost:5173"}/order-success?session_id=free_${order._id}`;
+      return res.json({ checkoutUrl: successUrl, isFree: true });
+    }
+
+    // Create line items for Stripe Checkout (exclude free items)
+    const lineItems = validatedBooks
+      .filter((it) => it.price > 0)
+      .map((it) => ({
+        price_data: {
+          currency: "inr",
+          product_data: { 
+            name: it.title || "Book",
+          },
+          unit_amount: Math.round(it.price * 100), 
         },
-        unit_amount: Math.round((it.price || 0) * 100), 
-      },
-      quantity: it.quantity || 1,
-    }));
+        quantity: it.quantity || 1,
+      }));
 
     // Add GST Tax as a separate line item if applicable
-    if (gstAmount && gstAmount > 0) {
+    if (computedGst > 0) {
       lineItems.push({
         price_data: {
           currency: "inr",
           product_data: {
             name: "GST Tax (5%)",
           },
-          unit_amount: Math.round(gstAmount * 100),
+          unit_amount: Math.round(computedGst * 100),
         },
         quantity: 1,
       });
     }
 
     // Add Shipping Fee as a separate line item if applicable
-    if (shippingAmount && shippingAmount > 0) {
+    if (computedShipping > 0) {
       lineItems.push({
         price_data: {
           currency: "inr",
           product_data: {
             name: "Shipping Charges",
           },
-          unit_amount: Math.round(shippingAmount * 100),
+          unit_amount: Math.round(computedShipping * 100),
         },
         quantity: 1,
       });
@@ -279,6 +330,29 @@ export const confirmPayment = async (req, res) => {
     const { sessionId } = req.body;
     if (!sessionId) {
       return res.status(400).json({ message: "Session ID is required" });
+    }
+
+    // Handle Free Order Bypass
+    if (sessionId.startsWith("free_")) {
+      const orderId = sessionId.replace("free_", "");
+      const order = await Order.findById(orderId);
+      if (order) {
+        if (order.status !== "paid") {
+          order.status = "paid";
+          await order.save();
+
+          // Mark books as unavailable
+          for (const item of order.books) {
+            await Book.findByIdAndUpdate(item.bookId, { isAvailable: false });
+          }
+        }
+        return res.status(200).json({ 
+          success: true, 
+          message: "Free order confirmed and updated", 
+          order 
+        });
+      }
+      return res.status(404).json({ message: "Free order not found" });
     }
 
     // Handle Developer Mock Bypass

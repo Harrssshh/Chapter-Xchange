@@ -108,7 +108,10 @@ const Cart = () => {
   };
 
   const totalPrice = cartItems.reduce(
-    (total, item) => total + (item.price || 0),
+    (total, item) => {
+      const isDon = item.isWillingToDonate || item.price === 0;
+      return total + (isDon ? 0 : (item.price || 0));
+    },
     0
   );
 
@@ -237,12 +240,15 @@ const Cart = () => {
           Authorization: `Bearer ${storedToken}`,
         },
         body: JSON.stringify({
-          items: cartItems.map((b) => ({
-            bookId: b._id,
-            quantity: 1,
-            price: b.price || 0,
-            title: b.title,
-          })),
+          items: cartItems.map((b) => {
+            const isDon = b.isWillingToDonate || b.price === 0;
+            return {
+              bookId: b._id,
+              quantity: 1,
+              price: isDon ? 0 : (b.price || 0),
+              title: b.title,
+            };
+          }),
           shippingAddress: {
             name: addressName,
             street: addressStreet,

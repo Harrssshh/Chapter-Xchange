@@ -93,7 +93,20 @@ export const addBook = async (req, res) => {
         return res.status(403).json({ success: false, message: "Unauthorized" });
         }
 
-        Object.assign(book, req.body);
+        const updates = { ...req.body };
+        if (updates.isWillingToDonate === "true" || updates.isWillingToDonate === true) {
+          updates.price = 0;
+          updates.isWillingToDonate = true;
+        } else if (updates.price !== undefined) {
+          const numPrice = Number(updates.price);
+          if (numPrice === 0) {
+            updates.isWillingToDonate = true;
+          } else {
+            updates.isWillingToDonate = false;
+          }
+        }
+
+        Object.assign(book, updates);
         await book.save();
 
         res.status(200).json({ success: true, book });
