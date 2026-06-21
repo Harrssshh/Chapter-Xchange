@@ -188,7 +188,13 @@ const Cart = () => {
   };
 
   const subtotal = totalPrice;
-  const gstAmount = Math.round(subtotal * 0.05);
+
+  let shippingAmount = 50;
+  if (subtotal > 500 || appliedCoupon === "FREESHIP") {
+    shippingAmount = 0;
+  }
+
+  const gstAmount = Math.round((subtotal + shippingAmount) * 0.05);
 
   let discountAmount = 0;
   if (appliedCoupon === "WELCOME10") {
@@ -197,11 +203,6 @@ const Cart = () => {
     discountAmount = Math.round(subtotal * 0.20);
   } else if (appliedCoupon === "BOOKWORM") {
     discountAmount = 100;
-  }
-
-  let shippingAmount = 50;
-  if (subtotal > 500 || appliedCoupon === "FREESHIP") {
-    shippingAmount = 0;
   }
 
   const finalTotal = subtotal + gstAmount + shippingAmount - discountAmount;

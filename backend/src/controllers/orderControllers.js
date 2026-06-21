@@ -106,7 +106,13 @@ export const createOrderAndSession = async (req, res) => {
       computedSubtotal += actualPrice * (item.quantity || 1);
     }
 
-    const computedGst = Math.round(computedSubtotal * 0.05);
+    // Recalculate shipping
+    let computedShipping = 50;
+    if (computedSubtotal > 500 || couponCode === "FREESHIP") {
+      computedShipping = 0;
+    }
+
+    const computedGst = Math.round((computedSubtotal + computedShipping) * 0.05);
 
     // Recalculate discount based on coupon code
     let computedDiscount = 0;
@@ -120,12 +126,6 @@ export const createOrderAndSession = async (req, res) => {
       if (computedSubtotal >= 400) {
         computedDiscount = 100;
       }
-    }
-
-    // Recalculate shipping
-    let computedShipping = 50;
-    if (computedSubtotal > 500 || couponCode === "FREESHIP") {
-      computedShipping = 0;
     }
 
     const computedTotal = computedSubtotal + computedGst + computedShipping - computedDiscount;
